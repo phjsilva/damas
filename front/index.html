@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Jogue damas a dois e entenda a lógica de cada movimento.">
+    <meta name="theme-color" content="#101b15">
+    <title>Damas — do código ao tabuleiro</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="estilo.css">
+    <script defer src="../back/damas.js"></script>
+    <script defer src="codigo-fonte.js"></script>
+    <script defer src="interface.js"></script>
+    <script defer src="aula.js"></script>
+    <script defer src="demonstracoes.js"></script>
+</head>
+<body>
+    <header class="topo">
+        <a class="marca" href="#inicio" aria-label="Damas, início">
+            <span class="marca-icone" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span>DAMAS<span class="marca-sub">DO CÓDIGO AO TABULEIRO</span></span>
+        </a>
+        <nav aria-label="Navegação principal">
+            <a href="#jogo" class="nav-jogar">Jogar</a>
+            <a href="#aula" class="nav-aula">Entenda a lógica <span aria-hidden="true">↗</span></a>
+            <button id="alternar-foco" type="button" class="botao-foco" aria-pressed="false">Focar no jogo</button>
+        </nav>
+    </header>
+    <main id="inicio">
+        <section class="introducao" aria-labelledby="titulo-principal">
+            <div>
+                <p class="etiqueta">ESTRUTURA DE DADOS <span aria-hidden="true">/</span> PROJETO 07</p>
+                <h1 id="titulo-principal">Damas, <em>na prática.</em></h1>
+                <p class="resumo">Dois jogadores, um tabuleiro e a lógica por trás de cada movimento.</p>
+            </div>
+            <div class="guia-rapido" aria-label="Como jogar">
+                <span><b>1</b> Selecione uma peça</span>
+                <span><b>2</b> Escolha uma casa marcada</span>
+                <span><b>3</b> Acompanhe a jogada</span>
+            </div>
+        </section>
+        <section id="jogo" class="laboratorio" aria-label="Jogo de damas">
+            <div class="area-jogo">
+                <div class="cabecalho-jogo">
+                    <div><h2>O tabuleiro</h2><p>2 jogadores · no mesmo dispositivo</p></div>
+                    <label class="alternador"><input id="mostrar-coordenadas" type="checkbox" checked><span>Coordenadas</span></label>
+                </div>
+                <div class="moldura">
+                    <div class="colunas-tabuleiro" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+                    <div class="linhas-tabuleiro" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+                    <div id="tabuleiro" role="group" aria-label="Tabuleiro de damas de oito linhas e oito colunas"></div>
+                </div>
+                <div class="legenda">
+                    <span><i class="ponto claro"></i> Jogador 1</span>
+                    <span><i class="ponto escuro"></i> Jogador 2</span>
+                    <span><i class="ponto destino"></i> Destino permitido</span>
+                </div>
+                <p class="dica-tabuleiro"><span aria-hidden="true">↗</span> Se houver captura, ela tem prioridade. A coroa <span aria-hidden="true">♛</span> identifica uma dama.</p>
+            </div>
+            <aside class="painel" aria-label="Controles e informações da partida">
+                <div class="titulo-painel"><span class="etiqueta">SUA PARTIDA</span><span id="situacao" class="selo">EM ANDAMENTO</span></div>
+                <div class="cabecalho-vez"><span id="indicador-vez" aria-hidden="true" data-jogador="1"></span><h2 id="vez">Vez do jogador 1</h2></div>
+                <p id="mensagem" role="status" aria-live="polite">Selecione uma peça clara para começar.</p>
+                <div class="placar" aria-label="Quantidade de peças">
+                    <div id="jogador-1" class="cartao-jogador" data-ativo="true">
+                        <span class="nome-jogador"><i class="mini-peca clara" aria-hidden="true"></i> Jogador 1</span>
+                        <div><strong id="quantidade-1">12</strong><span>peças</span></div>
+                        <small class="estado-jogador">Sua vez</small>
+                    </div>
+                    <div id="jogador-2" class="cartao-jogador" data-ativo="false">
+                        <span class="nome-jogador"><i class="mini-peca escura" aria-hidden="true"></i> Jogador 2</span>
+                        <div><strong id="quantidade-2">12</strong><span>peças</span></div>
+                        <small class="estado-jogador">Aguardando</small>
+                    </div>
+                </div>
+                <div class="acoes">
+                    <button id="reiniciar" type="button" class="principal"><span aria-hidden="true">↻</span> Nova partida</button>
+                    <button id="interromper" type="button" class="secundario">Interromper</button>
+                </div>
+                <details class="demonstracoes">
+                    <summary><span><span class="icone-exemplo" aria-hidden="true">◇</span> Exemplos de funcionalidades</span><span class="mais" aria-hidden="true">+</span></summary>
+                    <p>Escolha uma funcionalidade para testar em um tabuleiro preparado. Isso substitui a partida atual.</p>
+                    <div class="botoes-demonstracao">
+                        <button type="button" data-cenario="captura">Captura <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-cenario="promocao">Virar dama <span aria-hidden="true">♛</span></button>
+                        <button type="button" data-cenario="vitoria">Vitória <span aria-hidden="true">✓</span></button>
+                        <button type="button" data-cenario="interrupcao">Interrupção <span aria-hidden="true">‖</span></button>
+                    </div>
+                    <p>“Nova partida” restaura o tabuleiro completo.</p>
+                </details>
+                <div class="bloco-vivo">
+                    <p class="etiqueta"><span aria-hidden="true">&lt;/&gt;</span> Entenda esta jogada</p>
+                    <p id="explicacao-viva">Criamos uma matriz com 8 linhas e 8 colunas.</p>
+                    <code id="codigo-vivo">const jogo = criarJogo();</code>
+                </div>
+                <div class="historico">
+                    <div class="titulo-historico"><p class="etiqueta">HISTÓRICO</p><span id="contador-historico">0 registros</span></div>
+                    <ol id="historico"><li class="vazio">A primeira jogada começa com você.</li></ol>
+                </div>
+            </aside>
+        </section>
+            <section id="aula" class="aula">
+                <div class="titulo-secao">
+                    <div>
+                        <p class="etiqueta">02 / ENTENDA A ESTRUTURA</p>
+                        <h2>Uma aula em<br />cada movimento.</h2>
+                    </div>
+                    <p>
+                        Navegue pelas etapas. Os trechos abaixo vêm da lógica
+                        real utilizada pelo jogo.
+                    </p>
+                </div>
+                <div
+                    class="abas"
+                    role="tablist"
+                    aria-label="Etapas da explicação"
+                ></div>
+                <div class="conteudo-aula">
+                    <article>
+                        <span id="numero-aula" class="numero-aula"></span>
+                        <h3 id="titulo-aula"></h3>
+                        <p id="texto-aula"></p>
+                        <div id="detalhe-aula" class="detalhe-aula"></div>
+                        <button id="proxima-aula" class="link-botao">
+                            Próxima etapa →
+                        </button>
+                    </article>
+                    <div class="janela-codigo">
+                        <div class="barra-codigo">
+                            <span><i></i><i></i><i></i></span
+                            ><a id="arquivo-codigo" href="../back/damas.js" download
+                                >damas.js ↓</a
+                            >
+                        </div>
+                        <pre id="trecho-codigo" tabindex="0"></pre>
+                        <p id="legenda-codigo"></p>
+                    </div>
+                </div>
+            </section>
+            <section class="regras">
+                <div>
+                    <p class="etiqueta">03 / REGRAS DESTA VERSÃO</p>
+                    <h2>Antes da<br />próxima jogada.</h2>
+                    <p>
+                        O PDF não define uma variante das damas. Estas são as
+                        convenções adotadas para tornar o comportamento do
+                        programa claro.
+                    </p>
+                </div>
+                <div class="lista-regras">
+                    <article>
+                        <span>01</span>
+                        <div>
+                            <h3>Andar e capturar</h3>
+                            <p>
+                                Peças comuns andam uma casa na diagonal para
+                                frente. Capturam para frente ou para trás,
+                                saltando uma adversária. Se houver captura, ela
+                                é obrigatória.
+                            </p>
+                        </div>
+                    </article>
+                    <article>
+                        <span>02</span>
+                        <div>
+                            <h3>Continuar e promover</h3>
+                            <p>
+                                Uma nova captura com a mesma peça mantém a vez.
+                                Ao terminar a jogada na última linha, a peça
+                                vira dama e passa a percorrer diagonais a
+                                qualquer distância.
+                            </p>
+                        </div>
+                    </article>
+                    <article>
+                        <span>03</span>
+                        <div>
+                            <h3>Encerrar e comparar</h3>
+                            <p>
+                                Vence quem eliminar as peças adversárias ou
+                                deixar o adversário sem movimentos. Ao
+                                interromper, vence quem tem mais peças;
+                                quantidades iguais significam empate.
+                            </p>
+                        </div>
+                    </article>
+                    <p class="observacao">
+                        Simplificações: não aplicamos a lei da maioria (escolher
+                        a sequência com mais capturas) nem empate automático por
+                        repetição. Uma dama vale uma peça na contagem.
+                    </p>
+                </div>
+            </section>
+            <section class="requisitos">
+                <div>
+                    <p class="etiqueta">04 / CONEXÃO COM O ENUNCIADO</p>
+                    <h2>O que o projeto precisa mostrar?</h2>
+                </div>
+                <div class="colunas-requisitos">
+                    <article>
+                        <h3>Projeto 07</h3>
+                        <ul>
+                            <li>Partida web entre dois jogadores.</li>
+                            <li>Tabuleiro em um array bidimensional.</li>
+                            <li>Validação das jogadas e promoção a dama.</li>
+                            <li>Vitória quando acabam as peças adversárias.</li>
+                            <li>Interrupção com comparação de peças.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+            <footer>
+                <span>DAMAS / DO CÓDIGO AO TABULEIRO</span>
+                <p>Feito para jogar, entender e explicar.</p>
+                <a href="../back/damas.js" download>Baixar a lógica ↗</a>
+            </footer>
+        </main>
+    </body>
+</html>
