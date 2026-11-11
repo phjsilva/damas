@@ -253,3 +253,41 @@ footer p { margin-bottom: 0; }
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition: none !important; }
 }
+
+/* 7. ROTEIRO DE APRESENTAÇÃO E INSPEÇÃO DOS DADOS */
+[hidden] { display: none !important; }
+.inspecao-matriz { margin-top: 23px; padding: 14px 0 0; border-top: 1px solid var(--linha); }
+.inspecao-matriz summary { font-size: 13px; color: var(--verde); }
+.inspecao-matriz p { font-size: 12px; color: var(--muted); margin: 12px 0; }
+.rolagem-matriz { overflow-x: auto; }
+#matriz-viva { border-collapse: collapse; width: 100%; text-align: center; font: 13px/1.5 Consolas, monospace; }
+#matriz-viva caption { text-align: left; padding-bottom: 10px; color: var(--muted); font-size: 12px; }
+#matriz-viva td, #matriz-viva th { border: 1px solid var(--linha); padding: 5px; }
+#matriz-viva th { color: var(--verde); background: #13251a; }
+#matriz-viva td[data-valor="0"] { color: #869a83; }
+#matriz-viva td[data-valor="1"], #matriz-viva td[data-valor="3"] { color: #fff0cb; background: #3c4f32; }
+#matriz-viva td[data-valor="2"], #matriz-viva td[data-valor="4"] { color: #b8e7c2; background: #203d2a; }
+#matriz-viva td.matriz-selecionada { outline: 2px solid var(--ouro); outline-offset: -2px; }
+#estado-vivo { font: 12px/1.6 Consolas, monospace; color: #d5ecc4; white-space: pre-wrap; }
+.requisito-aula { margin: 9px 0; color: var(--ouro) !important; font-size: 12px !important; }
+.termos-aula { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+.termos-aula > div { padding: 12px; border: 1px solid var(--linha); border-radius: 7px; }
+.termos-aula dt { color: var(--verde); font-weight: 650; font-size: 12px; }
+.termos-aula dd { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.demo-aula { background: #1e3425; border: 1px solid var(--linha); border-radius: 8px; padding: 15px; }
+.demo-aula strong { font-size: 13px; color: var(--ouro); }
+.demo-aula p { font-size: 13px; margin: 7px 0 12px; color: var(--muted); }
+.demo-aula button { border-radius: 6px; padding: 9px 13px; font-size: 12px; min-height: 42px; }
+.demo-aula small { display: block; color: var(--muted); font-size: 11px; margin-top: 8px; }
+.navegacao-aula { display: flex; justify-content: space-between; gap: 12px; }
+.navegacao-aula button { min-height: 44px; font-size: 13px; }
+.conteudo-aula > article, .conteudo-aula > .janela-codigo { min-width: 0; }
+@media (max-width: 1000px) {
+    .topo nav { gap: 10px; }
+}
+@media (max-width: 760px) {
+    .topo { flex-wrap: wrap; padding: 14px 0; }
+    .topo nav { flex-wrap: wrap; gap: 8px; }
+    .topo .nav-aula { display: none; }
+    .termos-aula { grid-template-columns: 1fr; }
+}

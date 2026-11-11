@@ -56,6 +56,12 @@
                     <span><i class="ponto destino"></i> Destino permitido</span>
                 </div>
                 <p class="dica-tabuleiro"><span aria-hidden="true">↗</span> Se houver captura, ela tem prioridade. A coroa <span aria-hidden="true">♛</span> identifica uma dama.</p>
+                <details class="inspecao-matriz">
+                    <summary>Inspecionar a matriz e o estado da partida</summary>
+                    <p>Os mesmos dados do tabuleiro: 0 = vazio; 1 e 2 = peças; 3 e 4 = damas. A seleção aparece nas duas representações.</p>
+                    <div class="rolagem-matriz"><table id="matriz-viva"><caption>jogo.tabuleiro — índices de 0 a 7</caption></table></div>
+                    <pre id="estado-vivo"></pre>
+                </details>
             </div>
             <aside class="painel" aria-label="Controles e informações da partida">
                 <div class="titulo-painel"><span class="etiqueta">SUA PARTIDA</span><span id="situacao" class="selo">EM ANDAMENTO</span></div>
@@ -82,9 +88,12 @@
                     <p>Escolha uma funcionalidade para testar em um tabuleiro preparado. Isso substitui a partida atual.</p>
                     <div class="botoes-demonstracao">
                         <button type="button" data-cenario="captura">Captura <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-cenario="capturaTras">Capturar para trás <span aria-hidden="true">↘</span></button>
                         <button type="button" data-cenario="promocao">Virar dama <span aria-hidden="true">♛</span></button>
                         <button type="button" data-cenario="vitoria">Vitória <span aria-hidden="true">✓</span></button>
                         <button type="button" data-cenario="interrupcao">Interrupção <span aria-hidden="true">‖</span></button>
+                        <button type="button" data-cenario="dama">Mover dama <span aria-hidden="true">♛</span></button>
+                        <button type="button" data-cenario="empate">Empate <span aria-hidden="true">=</span></button>
                     </div>
                     <p>“Nova partida” restaura o tabuleiro completo.</p>
                 </details>
@@ -103,11 +112,10 @@
                 <div class="titulo-secao">
                     <div>
                         <p class="etiqueta">02 / ENTENDA A ESTRUTURA</p>
-                        <h2>Uma aula em<br />cada movimento.</h2>
+                        <h2>Do requisito ao algoritmo.</h2>
                     </div>
                     <p>
-                        Navegue pelas etapas. Os trechos abaixo vêm da lógica
-                        real utilizada pelo jogo.
+                        Um roteiro para apresentar a matriz, os algoritmos e as regras do Projeto 07. Os trechos vêm do código real.
                     </p>
                 </div>
                 <div
@@ -118,12 +126,13 @@
                 <div class="conteudo-aula">
                     <article>
                         <span id="numero-aula" class="numero-aula"></span>
+                        <p id="requisito-aula" class="requisito-aula"></p>
                         <h3 id="titulo-aula"></h3>
                         <p id="texto-aula"></p>
                         <div id="detalhe-aula" class="detalhe-aula"></div>
-                        <button id="proxima-aula" class="link-botao">
-                            Próxima etapa →
-                        </button>
+                        <dl id="termos-aula" class="termos-aula"></dl>
+                        <div class="demo-aula"><strong>Demonstre no tabuleiro</strong><p id="instrucao-aula"></p><button id="preparar-aula" type="button" class="secundario">Preparar demonstração</button><small>Substitui a partida atual por um exemplo preparado.</small></div>
+                        <div class="navegacao-aula"><button id="anterior-aula" type="button" class="link-botao">← Anterior</button><button id="proxima-aula" type="button" class="link-botao">Próxima etapa →</button></div>
                     </article>
                     <div class="janela-codigo">
                         <div class="barra-codigo">

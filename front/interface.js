@@ -16,6 +16,46 @@ function mesmaCasa(posicao, linha, coluna) {
 function atualizarTela() {
     desenharTabuleiro();
     atualizarPlacar();
+    desenharMatriz();
+}
+
+function desenharMatriz() {
+    const tabela = buscar("matriz-viva");
+    const cabecalho = document.createElement("thead");
+    const indices = document.createElement("tr");
+    for (const indice of ["L / C", 0, 1, 2, 3, 4, 5, 6, 7]) {
+        const celula = document.createElement("th");
+        celula.scope = "col";
+        celula.textContent = indice;
+        indices.append(celula);
+    }
+    cabecalho.append(indices);
+    const corpo = document.createElement("tbody");
+    jogo.tabuleiro.forEach((valores, linha) => {
+        const registro = document.createElement("tr");
+        const indice = document.createElement("th");
+        indice.scope = "row";
+        indice.textContent = linha;
+        registro.append(indice);
+        valores.forEach((valor, coluna) => {
+            const celula = document.createElement("td");
+            celula.textContent = valor;
+            celula.dataset.valor = valor;
+            if (mesmaCasa(selecionada, linha, coluna)) celula.classList.add("matriz-selecionada");
+            celula.title = `tabuleiro[${linha}][${coluna}] = ${valor}`;
+            registro.append(celula);
+        });
+        corpo.append(registro);
+    });
+    tabela.querySelector("thead")?.remove();
+    tabela.querySelector("tbody")?.remove();
+    tabela.append(cabecalho, corpo);
+    buscar("estado-vivo").textContent = JSON.stringify({
+        jogadorAtual: jogo.jogadorAtual,
+        continuacao: jogo.continuacao,
+        encerrado: jogo.encerrado,
+        vencedor: jogo.vencedor
+    }, null, 2);
 }
 
 function desenharTabuleiro() {
@@ -190,21 +230,25 @@ function tentarMover(linha, coluna) {
     }
 
     const promoveu = !ehDama(valorAntes) && ehDama(jogo.tabuleiro[linha][coluna]);
+    const frente = jogadorAntes === 1 ? -1 : 1;
+    const capturouParaTras = !ehDama(valorAntes) && movimento.capturada !== null &&
+        (linha - origem.linha) * frente < 0;
     let registro = `Jogador ${jogadorAntes}: ${origem.linha},${origem.coluna} → ${linha},${coluna}`;
-    if (movimento.capturada !== null) registro += " · captura";
+    if (movimento.capturada !== null) registro += capturouParaTras ? " · captura para trás" : " · captura";
     if (promoveu) registro += " · virou dama";
     registrar(registro);
-    explicarJogada(movimento, promoveu);
+    explicarJogada(movimento, promoveu, capturouParaTras);
 
     ultimaJogada = { linha, coluna };
     selecionada = jogo.continuacao;
     atualizarTela();
 }
 
-function explicarJogada(movimento, promoveu) {
+function explicarJogada(movimento, promoveu, capturouParaTras = false) {
     const { linha, coluna, destinoLinha, destinoColuna, capturada } = movimento;
     let texto = `A origem [${linha}][${coluna}] recebeu 0 e o destino [${destinoLinha}][${destinoColuna}] recebeu a peça.`;
     if (capturada !== null) texto += ` A adversária em [${capturada.linha}][${capturada.coluna}] foi removida.`;
+    if (capturouParaTras) texto += " A peça comum capturou para trás! A direção de frente restringe apenas os movimentos sem captura.";
     if (promoveu) texto += " A peça chegou à última linha e virou dama.";
 
     let mensagem = `Jogada concluída. Agora é a vez do jogador ${jogo.jogadorAtual}.`;
@@ -217,6 +261,7 @@ function explicarJogada(movimento, promoveu) {
     } else {
         texto += " A vez passou para o outro jogador.";
     }
+    if (capturouParaTras) mensagem = `Captura para trás realizada! ${mensagem}`;
     explicar(mensagem, texto, `moverPeca(jogo, ${linha}, ${coluna}, ${destinoLinha}, ${destinoColuna});`);
 }
 
