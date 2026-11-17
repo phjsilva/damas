@@ -2,7 +2,12 @@
 // Matriz: 0 = vazio; 1 e 2 = peças; 3 e 4 = damas. Índices: de 0 a 7.
 const TAMANHO = 8;
 const VAZIO = 0;
-const DIAGONAIS = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+const DIAGONAIS = [
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1],
+];
 
 // 1. CRIAR A PARTIDA
 function criarJogo() {
@@ -46,54 +51,26 @@ function outroJogador(jogador) {
 }
 
 function dentroDoTabuleiro(linha, coluna) {
-    return Number.isInteger(linha) && Number.isInteger(coluna) &&
-        linha >= 0 && linha < TAMANHO && coluna >= 0 && coluna < TAMANHO;
+    return (
+        Number.isInteger(linha) &&
+        Number.isInteger(coluna) &&
+        linha >= 0 &&
+        linha < TAMANHO &&
+        coluna >= 0 &&
+        coluna < TAMANHO
+    );
 }
 
 // 3. CALCULAR DESTINOS — sem alterar a matriz
 // Cada movimento guarda origem, destino e a adversária capturada (ou null).
-function movimentosDaPecaComum(jogo, linha, coluna) {
+function movimentosDaPeca(jogo, linha, coluna) {
+    const peca = jogo.tabuleiro[linha][coluna];
+    if (peca === VAZIO) return [];
     const movimentos = [];
-    const jogador = donoDaPeca(jogo.tabuleiro[linha][coluna]);
+    const jogador = donoDaPeca(peca);
+    const dama = ehDama(peca);
     let frente = -1;
     if (jogador === 2) frente = 1;
-
-    for (const diagonal of DIAGONAIS) {
-        const passoLinha = diagonal[0];
-        const passoColuna = diagonal[1];
-        const vizinhaLinha = linha + passoLinha;
-        const vizinhaColuna = coluna + passoColuna;
-        if (!dentroDoTabuleiro(vizinhaLinha, vizinhaColuna)) continue;
-
-        const vizinha = jogo.tabuleiro[vizinhaLinha][vizinhaColuna];
-
-        // Andar: uma casa vazia, apenas para frente.
-        if (vizinha === VAZIO && passoLinha === frente) {
-            movimentos.push({
-                linha, coluna,
-                destinoLinha: vizinhaLinha, destinoColuna: vizinhaColuna,
-                capturada: null,
-            });
-        }
-
-        // Capturar: saltar uma adversária, para frente ou para trás.
-        if (donoDaPeca(vizinha) !== outroJogador(jogador)) continue;
-        const destinoLinha = linha + 2 * passoLinha;
-        const destinoColuna = coluna + 2 * passoColuna;
-        if (!dentroDoTabuleiro(destinoLinha, destinoColuna)) continue;
-        if (jogo.tabuleiro[destinoLinha][destinoColuna] !== VAZIO) continue;
-
-        movimentos.push({
-            linha, coluna, destinoLinha, destinoColuna,
-            capturada: { linha: vizinhaLinha, coluna: vizinhaColuna },
-        });
-    }
-    return movimentos;
-}
-
-function movimentosDaDama(jogo, linha, coluna) {
-    const movimentos = [];
-    const jogador = donoDaPeca(jogo.tabuleiro[linha][coluna]);
 
     for (const diagonal of DIAGONAIS) {
         const passoLinha = diagonal[0];
@@ -102,15 +79,25 @@ function movimentosDaDama(jogo, linha, coluna) {
         let destinoColuna = coluna + passoColuna;
         let capturada = null;
 
-        // A dama percorre a diagonal até a borda ou um obstáculo.
+        // O mesmo percurso atende peças comuns e damas.
         while (dentroDoTabuleiro(destinoLinha, destinoColuna)) {
             const encontrada = jogo.tabuleiro[destinoLinha][destinoColuna];
 
             if (encontrada === VAZIO) {
-                movimentos.push({ linha, coluna, destinoLinha, destinoColuna, capturada });
+                // A peça comum anda para frente, mas pode capturar nos dois sentidos.
+                if (dama || capturada !== null || passoLinha === frente) {
+                    movimentos.push({
+                        linha,
+                        coluna,
+                        destinoLinha,
+                        destinoColuna,
+                        capturada,
+                    });
+                }
+                if (!dama) break; // A peça comum para na primeira casa vazia.
             } else {
-                if (donoDaPeca(encontrada) === jogador) break;
-                if (capturada !== null) break;
+                if (donoDaPeca(encontrada) === jogador || capturada !== null)
+                    break;
                 capturada = { linha: destinoLinha, coluna: destinoColuna };
             }
 
@@ -119,13 +106,6 @@ function movimentosDaDama(jogo, linha, coluna) {
         }
     }
     return movimentos;
-}
-
-function movimentosDaPeca(jogo, linha, coluna) {
-    const peca = jogo.tabuleiro[linha][coluna];
-    if (peca === VAZIO) return [];
-    if (ehDama(peca)) return movimentosDaDama(jogo, linha, coluna);
-    return movimentosDaPecaComum(jogo, linha, coluna);
 }
 
 function movimentosPermitidos(jogo) {
@@ -138,9 +118,12 @@ function movimentosPermitidos(jogo) {
             if (donoDaPeca(peca) !== jogo.jogadorAtual) continue;
 
             // Em uma sequência, somente a peça que capturou pode jogar.
-            if (jogo.continuacao !== null) {
-                if (linha !== jogo.continuacao.linha || coluna !== jogo.continuacao.coluna) continue;
-            }
+            if (
+                jogo.continuacao !== null &&
+                (linha !== jogo.continuacao.linha ||
+                    coluna !== jogo.continuacao.coluna)
+            )
+                continue;
 
             for (const movimento of movimentosDaPeca(jogo, linha, coluna)) {
                 movimentos.push(movimento);
@@ -148,7 +131,9 @@ function movimentosPermitidos(jogo) {
         }
     }
 
-    const capturas = movimentos.filter(movimento => movimento.capturada !== null);
+    const capturas = movimentos.filter(
+        (movimento) => movimento.capturada !== null,
+    );
     if (jogo.continuacao !== null || capturas.length > 0) return capturas;
     return movimentos;
 }
@@ -159,25 +144,19 @@ function moverPeca(jogo, linha, coluna, destinoLinha, destinoColuna) {
         return { sucesso: false, mensagem: "A partida já terminou." };
     }
 
-    const movimento = movimentosPermitidos(jogo).find(opcao =>
-        opcao.linha === linha && opcao.coluna === coluna &&
-        opcao.destinoLinha === destinoLinha && opcao.destinoColuna === destinoColuna
+    const movimento = movimentosPermitidos(jogo).find(
+        (opcao) =>
+            opcao.linha === linha &&
+            opcao.coluna === coluna &&
+            opcao.destinoLinha === destinoLinha &&
+            opcao.destinoColuna === destinoColuna,
     );
 
     if (!movimento) {
         return { sucesso: false, mensagem: "Movimento proibido." };
     }
 
-    executarMovimento(jogo, movimento);
-    atualizarVez(jogo, movimento);
-    verificarVitoria(jogo);
-
-    let mensagem = "Peça movida.";
-    if (jogo.encerrado) mensagem = "Partida encerrada.";
-    return { sucesso: true, mensagem };
-}
-
-function executarMovimento(jogo, movimento) {
+    // Só altera a matriz depois de encontrar uma jogada válida.
     const peca = jogo.tabuleiro[movimento.linha][movimento.coluna];
     jogo.tabuleiro[movimento.linha][movimento.coluna] = VAZIO;
     jogo.tabuleiro[movimento.destinoLinha][movimento.destinoColuna] = peca;
@@ -186,6 +165,12 @@ function executarMovimento(jogo, movimento) {
         const capturada = movimento.capturada;
         jogo.tabuleiro[capturada.linha][capturada.coluna] = VAZIO;
     }
+
+    atualizarVez(jogo, movimento);
+    verificarVitoria(jogo);
+    let mensagem = "Peça movida.";
+    if (jogo.encerrado) mensagem = "Partida encerrada.";
+    return { sucesso: true, mensagem, movimento };
 }
 
 function atualizarVez(jogo, movimento) {
@@ -195,7 +180,9 @@ function atualizarVez(jogo, movimento) {
 
     if (movimento.capturada !== null) {
         const proximos = movimentosDaPeca(jogo, linha, coluna);
-        const podeCapturarDeNovo = proximos.some(opcao => opcao.capturada !== null);
+        const podeCapturarDeNovo = proximos.some(
+            (opcao) => opcao.capturada !== null,
+        );
 
         if (podeCapturarDeNovo) {
             jogo.continuacao = { linha, coluna };
@@ -239,7 +226,10 @@ function verificarVitoria(jogo) {
         encerrarJogo(jogo, 2);
     } else if (quantidades.jogador2 === 0) {
         encerrarJogo(jogo, 1);
-    } else if (jogo.continuacao === null && movimentosPermitidos(jogo).length === 0) {
+    } else if (
+        jogo.continuacao === null &&
+        movimentosPermitidos(jogo).length === 0
+    ) {
         encerrarJogo(jogo, outroJogador(jogo.jogadorAtual));
     }
 }
@@ -260,5 +250,11 @@ function interromperPartida(jogo) {
 // No navegador, front/index.html carrega este arquivo com ../back/damas.js.
 // No Node.js, esta exportação permite verificar as regras sem abrir a página.
 if (typeof module !== "undefined") {
-    module.exports = { criarJogo, movimentosPermitidos, moverPeca, contarPecas, interromperPartida };
+    module.exports = {
+        criarJogo,
+        movimentosPermitidos,
+        moverPeca,
+        contarPecas,
+        interromperPartida,
+    };
 }

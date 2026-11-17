@@ -1,0 +1,224 @@
+/* Cartões de código: os estilos ficam restritos à seção de explicação. */
+.aula .conteudo-aula {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 28px;
+}
+.aula .abas button[aria-selected="true"] {
+    background: var(--verde);
+    color: #142218;
+}
+.aula .bloco-codigo {
+    min-width: 0;
+}
+.aula .acoes-codigo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.aula .acoes-codigo > span {
+    color: var(--muted);
+    font:
+        10px Consolas,
+        monospace;
+    letter-spacing: 1px;
+}
+.aula .acoes-codigo > div {
+    display: flex;
+    gap: 6px;
+}
+.aula .acoes-codigo button {
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid var(--linha);
+    border-radius: 6px;
+    background: var(--papel);
+    color: var(--texto);
+    font:
+        600 11px "Segoe UI",
+        sans-serif;
+}
+.aula .acoes-codigo button:hover {
+    background: var(--suave);
+    border-color: var(--verde);
+}
+.aula .captura-codigo {
+    padding: 28px;
+    border: 1px solid #42604b;
+    border-radius: 15px;
+    background:
+        radial-gradient(ellipse at top left, #476a46, transparent 65%),
+        linear-gradient(135deg, #2e4f37, #183b30);
+}
+.aula .janela-codigo {
+    background: #171d27;
+    color: #d6deeb;
+    border: 1px solid #ffffff20;
+    border-radius: 11px;
+    box-shadow: 0 20px 40px #08160d50;
+}
+.aula .barra-codigo {
+    gap: 12px;
+    padding: 16px;
+    border-bottom-color: #ffffff0c;
+    color: #a6b4c8;
+}
+.aula .barra-codigo > a {
+    flex: 1;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.aula .controles-janela {
+    display: flex;
+    flex-shrink: 0;
+    gap: 5px;
+}
+.aula .controles-janela i {
+    width: 8px;
+    height: 8px;
+    margin: 0;
+    background: #ff5f57;
+}
+.aula .controles-janela i:nth-child(2) {
+    background: #febc2e;
+}
+.aula .controles-janela i:nth-child(3) {
+    background: #28c840;
+}
+.aula .linguagem-codigo {
+    color: #b7c4d7;
+    font-size: 9px;
+}
+.aula .janela-codigo .escopo-codigo {
+    border: 0;
+    padding: 14px 16px 6px;
+    color: #a6b4c8;
+    font:
+        10px/1.6 Consolas,
+        monospace;
+}
+.aula .janela-codigo pre {
+    min-height: 120px;
+    max-height: 500px;
+    padding: 10px 0 20px;
+    font:
+        12px/1.9 "Cascadia Code",
+        Consolas,
+        monospace;
+    font-variant-ligatures: none;
+    scrollbar-color: #58657b #171d27;
+}
+.aula .linha-codigo {
+    min-height: 23px;
+    padding-right: 18px;
+}
+.aula .linha-codigo.destaque {
+    color: inherit;
+    background: #b9d69c0a;
+    box-shadow: inset 2px 0 var(--verde);
+}
+.aula .numero-linha {
+    width: 44px;
+    top-color: #ffffff0c;
+    color: #a6b4c8;
+}
+.aula .sintaxe-palavra {
+    color: #c792ea;
+}
+.aula .sintaxe-texto {
+    color: #c3e88d;
+}
+.aula .sintaxe-comentario {
+    color: #98a6b9;
+    font-style: italic;
+}
+.aula .sintaxe-funcao {
+    color: #82aaff;
+}
+.aula .sintaxe-numero {
+    color: #f78c6c;
+}
+.aula .sintaxe-constante {
+    color: #ffcb6b;
+}
+.aula .aviso-codigo {
+    min-height: 18px;
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+.aula .navegacao-aula {
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--linha);
+}
+.aula #contador-etapas {
+    color: var(--muted);
+    font-size: 12px;
+}
+.aula.codigo-ampliado .conteudo-aula {
+    grid-template-columns: minmax(0, 1fr);
+}
+.aula.codigo-ampliado .explicacao-aula {
+    display: none;
+}
+.aula.codigo-ampliado .captura-codigo {
+    padding: clamp(20px, 4vw, 45px);
+}
+.aula.codigo-ampliado .janela-codigo pre {
+    max-height: none;
+    font-size: 14px;
+}
+@media (max-width: 780px) {
+    .aula .conteudo-aula {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+@media (max-width: 550px) {
+    .aula .captura-codigo {
+        padding: 14px;
+    }
+    .aula .acoes-codigo {
+        flex-wrap: wrap;
+    }
+    .aula .linguagem-codigo {
+        display: none;
+    }
+    .aula.codigo-ampliado .janela-codigo pre {
+        font-size: 12px;
+    }
+}
+
+.pagina-codigo .introducao {
+    padding-bottom: 20px;
+}
+.pagina-codigo .aula {
+    padding-top: 12px;
+}
+.aula .explicacao-aula h2 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+.aula .demo-aula a {
+    display: inline-block;
+    border: 1px solid var(--linha);
+    border-radius: 6px;
+    padding: 10px 13px;
+    background: var(--suave);
+    color: var(--texto);
+    font-size: 12px;
+    text-decoration: none;
+}
+.aula .demo-aula a:hover {
+    border-color: var(--verde);
+}
+
+.pagina-codigo .topo .nav-jogar {
+    display: inline;
+}
+.pagina-codigo .topo nav {
+    gap: 14px;
+}

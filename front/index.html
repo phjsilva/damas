@@ -5,24 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Jogue damas a dois e entenda a lógica de cada movimento.">
     <meta name="theme-color" content="#101b15">
-    <title>Damas — do código ao tabuleiro</title>
+    <title>Jogo de damas | Estrutura de Dados</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="estilo.css">
     <script defer src="../back/damas.js"></script>
-    <script defer src="codigo-fonte.js"></script>
     <script defer src="interface.js"></script>
-    <script defer src="aula.js"></script>
     <script defer src="demonstracoes.js"></script>
 </head>
 <body>
     <header class="topo">
         <a class="marca" href="#inicio" aria-label="Damas, início">
             <span class="marca-icone" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <span>DAMAS<span class="marca-sub">DO CÓDIGO AO TABULEIRO</span></span>
+            <span>DAMAS<span class="marca-sub">ESTRUTURA DE DADOS</span></span>
         </a>
         <nav aria-label="Navegação principal">
-            <a href="#jogo" class="nav-jogar">Jogar</a>
-            <a href="#aula" class="nav-aula">Entenda a lógica <span aria-hidden="true">↗</span></a>
+            <a href="index.html" class="nav-jogar" aria-current="page">Jogo</a>
+            <a href="codigo.html" class="nav-codigo">Código do projeto <span aria-hidden="true">↗</span></a>
             <button id="alternar-foco" type="button" class="botao-foco" aria-pressed="false">Focar no jogo</button>
         </nav>
     </header>
@@ -30,7 +28,7 @@
         <section class="introducao" aria-labelledby="titulo-principal">
             <div>
                 <p class="etiqueta">ESTRUTURA DE DADOS <span aria-hidden="true">/</span> PROJETO 07</p>
-                <h1 id="titulo-principal">Damas, <em>na prática.</em></h1>
+                <h1 id="titulo-principal">Jogo de <em>damas</em></h1>
                 <p class="resumo">Dois jogadores, um tabuleiro e a lógica por trás de cada movimento.</p>
             </div>
             <div class="guia-rapido" aria-label="Como jogar">
@@ -42,7 +40,7 @@
         <section id="jogo" class="laboratorio" aria-label="Jogo de damas">
             <div class="area-jogo">
                 <div class="cabecalho-jogo">
-                    <div><h2>O tabuleiro</h2><p>2 jogadores · no mesmo dispositivo</p></div>
+                    <div><h2>Tabuleiro</h2><p>2 jogadores · no mesmo dispositivo</p></div>
                     <label class="alternador"><input id="mostrar-coordenadas" type="checkbox" checked><span>Coordenadas</span></label>
                 </div>
                 <div class="moldura">
@@ -98,9 +96,8 @@
                     <p>“Nova partida” restaura o tabuleiro completo.</p>
                 </details>
                 <div class="bloco-vivo">
-                    <p class="etiqueta"><span aria-hidden="true">&lt;/&gt;</span> Entenda esta jogada</p>
+                    <p class="etiqueta">Detalhes da jogada</p>
                     <p id="explicacao-viva">Criamos uma matriz com 8 linhas e 8 colunas.</p>
-                    <code id="codigo-vivo">const jogo = criarJogo();</code>
                 </div>
                 <div class="historico">
                     <div class="titulo-historico"><p class="etiqueta">HISTÓRICO</p><span id="contador-historico">0 registros</span></div>
@@ -108,48 +105,10 @@
                 </div>
             </aside>
         </section>
-            <section id="aula" class="aula">
-                <div class="titulo-secao">
-                    <div>
-                        <p class="etiqueta">02 / ENTENDA A ESTRUTURA</p>
-                        <h2>Do requisito ao algoritmo.</h2>
-                    </div>
-                    <p>
-                        Um roteiro para apresentar a matriz, os algoritmos e as regras do Projeto 07. Os trechos vêm do código real.
-                    </p>
-                </div>
-                <div
-                    class="abas"
-                    role="tablist"
-                    aria-label="Etapas da explicação"
-                ></div>
-                <div class="conteudo-aula">
-                    <article>
-                        <span id="numero-aula" class="numero-aula"></span>
-                        <p id="requisito-aula" class="requisito-aula"></p>
-                        <h3 id="titulo-aula"></h3>
-                        <p id="texto-aula"></p>
-                        <div id="detalhe-aula" class="detalhe-aula"></div>
-                        <dl id="termos-aula" class="termos-aula"></dl>
-                        <div class="demo-aula"><strong>Demonstre no tabuleiro</strong><p id="instrucao-aula"></p><button id="preparar-aula" type="button" class="secundario">Preparar demonstração</button><small>Substitui a partida atual por um exemplo preparado.</small></div>
-                        <div class="navegacao-aula"><button id="anterior-aula" type="button" class="link-botao">← Anterior</button><button id="proxima-aula" type="button" class="link-botao">Próxima etapa →</button></div>
-                    </article>
-                    <div class="janela-codigo">
-                        <div class="barra-codigo">
-                            <span><i></i><i></i><i></i></span
-                            ><a id="arquivo-codigo" href="../back/damas.js" download
-                                >damas.js ↓</a
-                            >
-                        </div>
-                        <pre id="trecho-codigo" tabindex="0"></pre>
-                        <p id="legenda-codigo"></p>
-                    </div>
-                </div>
-            </section>
             <section class="regras">
                 <div>
-                    <p class="etiqueta">03 / REGRAS DESTA VERSÃO</p>
-                    <h2>Antes da<br />próxima jogada.</h2>
+                    <p class="etiqueta">REGRAS DO JOGO</p>
+                    <h2>Regras do jogo</h2>
                     <p>
                         O PDF não define uma variante das damas. Estas são as
                         convenções adotadas para tornar o comportamento do
@@ -202,8 +161,8 @@
             </section>
             <section class="requisitos">
                 <div>
-                    <p class="etiqueta">04 / CONEXÃO COM O ENUNCIADO</p>
-                    <h2>O que o projeto precisa mostrar?</h2>
+                    <p class="etiqueta">PROJETO 07</p>
+                    <h2>Requisitos do projeto</h2>
                 </div>
                 <div class="colunas-requisitos">
                     <article>
@@ -219,9 +178,9 @@
                 </div>
             </section>
             <footer>
-                <span>DAMAS / DO CÓDIGO AO TABULEIRO</span>
+                <span>DAMAS / ESTRUTURA DE DADOS</span>
                 <p>Feito para jogar, entender e explicar.</p>
-                <a href="../back/damas.js" download>Baixar a lógica ↗</a>
+                <a href="codigo.html">Ver o código do projeto ↗</a>
             </footer>
         </main>
     </body>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Código do jogo de damas explicado por etapas: matriz, movimentos, capturas e regras.">
+    <meta name="theme-color" content="#101b15">
+    <title>Código do projeto | Damas</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="aula.css">
+    <script defer src="codigo-fonte.js"></script>
+    <script defer src="aula-codigo.js"></script>
+    <script defer src="aula.js"></script>
+</head>
+<body class="pagina-codigo">
+    <header class="topo">
+        <a class="marca" href="index.html" aria-label="Damas, início">
+            <span class="marca-icone" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span>DAMAS<span class="marca-sub">ESTRUTURA DE DADOS</span></span>
+        </a>
+        <nav aria-label="Navegação principal">
+            <a href="index.html" class="nav-jogar">Jogo</a>
+            <a href="codigo.html" class="nav-codigo" aria-current="page">Código do projeto <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+    <main id="inicio">
+        <section class="introducao" aria-labelledby="titulo-principal">
+            <div>
+                <p class="etiqueta">ESTRUTURA DE DADOS <span aria-hidden="true">/</span> PROJETO 07</p>
+                <h1 id="titulo-principal">Código do <em>projeto</em></h1>
+                <p class="resumo">A matriz, os movimentos e as regras do jogo de damas, explicados com trechos do código real.</p>
+            </div>
+        </section>
+            <section id="aula" class="aula">
+                <div
+                    class="abas"
+                    role="tablist"
+                    aria-label="Etapas da explicação"
+                ></div>
+                <div class="conteudo-aula">
+                    <article class="explicacao-aula">
+                        <span id="numero-aula" class="numero-aula"></span>
+                        <p id="requisito-aula" class="requisito-aula"></p>
+                        <h2 id="titulo-aula"></h2>
+                        <p id="texto-aula"></p>
+                        <div id="detalhe-aula" class="detalhe-aula"></div>
+                        <dl id="termos-aula" class="termos-aula"></dl>
+                        <div class="demo-aula"><strong>Demonstre no tabuleiro</strong><p id="instrucao-aula"></p><a id="preparar-aula" href="index.html?cenario=inicio#jogo" target="_blank" rel="noopener">Testar no tabuleiro ↗</a><small>Abre o exemplo em outra aba.</small></div>
+                    </article>
+                    <div class="bloco-codigo">
+                        <div class="acoes-codigo" role="group" aria-label="Ações do código">
+                            <span>JAVASCRIPT</span>
+                            <div>
+                                <button id="copiar-codigo" type="button">Copiar código</button>
+                                <button id="ampliar-codigo" type="button" aria-pressed="false">Ampliar código ↗</button>
+                            </div>
+                        </div>
+                        <div class="captura-codigo">
+                            <div class="janela-codigo">
+                                <div class="barra-codigo">
+                                    <span class="controles-janela" aria-hidden="true"><i></i><i></i><i></i></span>
+                                    <a id="arquivo-codigo" href="../back/damas.js" download>back/damas.js ↓</a>
+                                    <span class="linguagem-codigo">JavaScript</span>
+                                </div>
+                                <p class="escopo-codigo"><span id="nome-trecho"></span> · linhas do arquivo original</p>
+                                <pre id="trecho-codigo" tabindex="0" aria-label="Código da etapa"></pre>
+                                <p id="legenda-codigo"></p>
+                            </div>
+                        </div>
+                        <p id="aviso-codigo" class="aviso-codigo" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+                <div class="navegacao-aula">
+                    <button id="anterior-aula" type="button" class="link-botao">← Anterior</button>
+                    <span id="contador-etapas"></span>
+                    <button id="proxima-aula" type="button" class="link-botao">Próxima etapa →</button>
+                </div>
+            </section>
+        <footer>
+            <span>DAMAS / ESTRUTURA DE DADOS</span>
+            <p>Escolha uma etapa para entender a lógica e testar no tabuleiro.</p>
+            <a href="index.html">Voltar ao jogo ↗</a>
+        </footer>
+    </main>
+</body>
+</html>

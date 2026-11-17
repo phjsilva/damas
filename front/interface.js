@@ -9,7 +9,9 @@ function buscar(id) {
 }
 
 function mesmaCasa(posicao, linha, coluna) {
-    return posicao !== null && posicao.linha === linha && posicao.coluna === coluna;
+    return (
+        posicao !== null && posicao.linha === linha && posicao.coluna === coluna
+    );
 }
 
 // 1. DESENHAR O ESTADO ATUAL
@@ -41,7 +43,8 @@ function desenharMatriz() {
             const celula = document.createElement("td");
             celula.textContent = valor;
             celula.dataset.valor = valor;
-            if (mesmaCasa(selecionada, linha, coluna)) celula.classList.add("matriz-selecionada");
+            if (mesmaCasa(selecionada, linha, coluna))
+                celula.classList.add("matriz-selecionada");
             celula.title = `tabuleiro[${linha}][${coluna}] = ${valor}`;
             registro.append(celula);
         });
@@ -50,19 +53,23 @@ function desenharMatriz() {
     tabela.querySelector("thead")?.remove();
     tabela.querySelector("tbody")?.remove();
     tabela.append(cabecalho, corpo);
-    buscar("estado-vivo").textContent = JSON.stringify({
-        jogadorAtual: jogo.jogadorAtual,
-        continuacao: jogo.continuacao,
-        encerrado: jogo.encerrado,
-        vencedor: jogo.vencedor
-    }, null, 2);
+    buscar("estado-vivo").textContent = JSON.stringify(
+        {
+            jogadorAtual: jogo.jogadorAtual,
+            continuacao: jogo.continuacao,
+            encerrado: jogo.encerrado,
+            vencedor: jogo.vencedor,
+        },
+        null,
+        2,
+    );
 }
 
 function desenharTabuleiro() {
     const tabuleiroNaTela = buscar("tabuleiro");
     const focoAnterior = document.activeElement?.dataset?.posicao;
-    const destinos = movimentosPermitidos(jogo).filter(movimento =>
-        mesmaCasa(selecionada, movimento.linha, movimento.coluna)
+    const destinos = movimentosPermitidos(jogo).filter((movimento) =>
+        mesmaCasa(selecionada, movimento.linha, movimento.coluna),
     );
 
     tabuleiroNaTela.replaceChildren();
@@ -74,7 +81,9 @@ function desenharTabuleiro() {
 
     // Recupera o foco para quem joga usando o teclado.
     if (focoAnterior) {
-        const casaAnterior = tabuleiroNaTela.querySelector(`[data-posicao="${focoAnterior}"]`);
+        const casaAnterior = tabuleiroNaTela.querySelector(
+            `[data-posicao="${focoAnterior}"]`,
+        );
         casaAnterior?.focus({ preventScroll: true });
     }
 }
@@ -83,8 +92,10 @@ function criarCasa(linha, coluna, destinos) {
     const valor = jogo.tabuleiro[linha][coluna];
     const jogador = donoDaPeca(valor);
     const casa = document.createElement("button");
-    const destinoPermitido = destinos.some(movimento =>
-        movimento.destinoLinha === linha && movimento.destinoColuna === coluna
+    const destinoPermitido = destinos.some(
+        (movimento) =>
+            movimento.destinoLinha === linha &&
+            movimento.destinoColuna === coluna,
     );
 
     casa.type = "button";
@@ -92,7 +103,8 @@ function criarCasa(linha, coluna, destinos) {
     casa.dataset.posicao = `${linha},${coluna}`;
     if ((linha + coluna) % 2 === 1) casa.classList.add("escura");
     if (destinoPermitido) casa.classList.add("possivel");
-    if (mesmaCasa(selecionada, linha, coluna)) casa.classList.add("selecionada");
+    if (mesmaCasa(selecionada, linha, coluna))
+        casa.classList.add("selecionada");
     if (mesmaCasa(ultimaJogada, linha, coluna)) casa.classList.add("ultima");
 
     let descricao = "vazia";
@@ -102,8 +114,14 @@ function criarCasa(linha, coluna, destinos) {
         descricao = `${tipo} do jogador ${jogador}`;
     }
     if (destinoPermitido) descricao += ", destino permitido";
-    casa.setAttribute("aria-label", `Linha ${linha}, coluna ${coluna}: ${descricao}`);
-    casa.setAttribute("aria-pressed", String(mesmaCasa(selecionada, linha, coluna)));
+    casa.setAttribute(
+        "aria-label",
+        `Linha ${linha}, coluna ${coluna}: ${descricao}`,
+    );
+    casa.setAttribute(
+        "aria-pressed",
+        String(mesmaCasa(selecionada, linha, coluna)),
+    );
 
     const coordenada = document.createElement("span");
     coordenada.className = "coordenada";
@@ -166,10 +184,9 @@ function mostrarMensagem(texto, tipo = "informacao") {
     buscar("mensagem").dataset.tipo = tipo;
 }
 
-function explicar(mensagem, explicacao, codigo, tipo = "informacao") {
+function explicar(mensagem, explicacao, tipo = "informacao") {
     mostrarMensagem(mensagem, tipo);
     buscar("explicacao-viva").textContent = explicacao;
-    buscar("codigo-vivo").textContent = codigo;
 }
 
 // 2. SELECIONAR UMA PEÇA OU TENTAR UMA JOGADA
@@ -180,61 +197,72 @@ function clicarNaCasa(linha, coluna) {
     if (donoDaPeca(peca) === jogo.jogadorAtual) {
         selecionarPeca(linha, coluna);
     } else if (selecionada === null) {
-        mostrarMensagem(`Selecione primeiro uma peça do jogador ${jogo.jogadorAtual}.`);
+        mostrarMensagem(
+            `Selecione primeiro uma peça do jogador ${jogo.jogadorAtual}.`,
+        );
     } else {
         tentarMover(linha, coluna);
     }
 }
 
 function selecionarPeca(linha, coluna) {
-    if (jogo.continuacao !== null && !mesmaCasa(jogo.continuacao, linha, coluna)) {
+    if (
+        jogo.continuacao !== null &&
+        !mesmaCasa(jogo.continuacao, linha, coluna)
+    ) {
         mostrarMensagem("Continue a captura com a mesma peça marcada.");
         return;
     }
 
     selecionada = { linha, coluna };
-    const opcoes = movimentosPermitidos(jogo).filter(movimento =>
-        movimento.linha === linha && movimento.coluna === coluna
+    const opcoes = movimentosPermitidos(jogo).filter(
+        (movimento) => movimento.linha === linha && movimento.coluna === coluna,
     );
     let mensagem = "Agora escolha uma das casas marcadas.";
     if (opcoes.length === 0) {
-        mensagem = "Esta peça não pode se mover agora. Pode haver captura obrigatória com outra peça.";
+        mensagem =
+            "Esta peça não pode se mover agora. Pode haver captura obrigatória com outra peça.";
     }
 
     explicar(
         mensagem,
         `Consultamos tabuleiro[${linha}][${coluna}] e os destinos permitidos. Nenhuma peça foi movida ainda.`,
-        `jogo.tabuleiro[${linha}][${coluna}] // valor: ${jogo.tabuleiro[linha][coluna]}`
     );
     atualizarTela();
 }
 
 function tentarMover(linha, coluna) {
     const origem = selecionada;
-    const movimento = movimentosPermitidos(jogo).find(opcao =>
-        opcao.linha === origem.linha && opcao.coluna === origem.coluna &&
-        opcao.destinoLinha === linha && opcao.destinoColuna === coluna
-    );
     const valorAntes = jogo.tabuleiro[origem.linha][origem.coluna];
     const jogadorAntes = jogo.jogadorAtual;
-    const resultado = moverPeca(jogo, origem.linha, origem.coluna, linha, coluna);
+    const resultado = moverPeca(
+        jogo,
+        origem.linha,
+        origem.coluna,
+        linha,
+        coluna,
+    );
 
     if (!resultado.sucesso) {
         explicar(
             "Movimento proibido. Escolha uma casa marcada.",
             "A validação rejeitou o destino. A matriz e a vez continuam iguais.",
-            "if (!movimento) return { sucesso: false, ... };",
-            "erro"
+            "erro",
         );
         return;
     }
 
-    const promoveu = !ehDama(valorAntes) && ehDama(jogo.tabuleiro[linha][coluna]);
+    const movimento = resultado.movimento;
+    const promoveu =
+        !ehDama(valorAntes) && ehDama(jogo.tabuleiro[linha][coluna]);
     const frente = jogadorAntes === 1 ? -1 : 1;
-    const capturouParaTras = !ehDama(valorAntes) && movimento.capturada !== null &&
+    const capturouParaTras =
+        !ehDama(valorAntes) &&
+        movimento.capturada !== null &&
         (linha - origem.linha) * frente < 0;
     let registro = `Jogador ${jogadorAntes}: ${origem.linha},${origem.coluna} → ${linha},${coluna}`;
-    if (movimento.capturada !== null) registro += capturouParaTras ? " · captura para trás" : " · captura";
+    if (movimento.capturada !== null)
+        registro += capturouParaTras ? " · captura para trás" : " · captura";
     if (promoveu) registro += " · virou dama";
     registrar(registro);
     explicarJogada(movimento, promoveu, capturouParaTras);
@@ -247,8 +275,11 @@ function tentarMover(linha, coluna) {
 function explicarJogada(movimento, promoveu, capturouParaTras = false) {
     const { linha, coluna, destinoLinha, destinoColuna, capturada } = movimento;
     let texto = `A origem [${linha}][${coluna}] recebeu 0 e o destino [${destinoLinha}][${destinoColuna}] recebeu a peça.`;
-    if (capturada !== null) texto += ` A adversária em [${capturada.linha}][${capturada.coluna}] foi removida.`;
-    if (capturouParaTras) texto += " A peça comum capturou para trás! A direção de frente restringe apenas os movimentos sem captura.";
+    if (capturada !== null)
+        texto += ` A adversária em [${capturada.linha}][${capturada.coluna}] foi removida.`;
+    if (capturouParaTras)
+        texto +=
+            " A peça comum capturou para trás! A direção de frente restringe apenas os movimentos sem captura.";
     if (promoveu) texto += " A peça chegou à última linha e virou dama.";
 
     let mensagem = `Jogada concluída. Agora é a vez do jogador ${jogo.jogadorAtual}.`;
@@ -262,7 +293,7 @@ function explicarJogada(movimento, promoveu, capturouParaTras = false) {
         texto += " A vez passou para o outro jogador.";
     }
     if (capturouParaTras) mensagem = `Captura para trás realizada! ${mensagem}`;
-    explicar(mensagem, texto, `moverPeca(jogo, ${linha}, ${coluna}, ${destinoLinha}, ${destinoColuna});`);
+    explicar(mensagem, texto);
 }
 
 // 3. HISTÓRICO, NOVA PARTIDA E INTERRUPÇÃO
@@ -292,7 +323,6 @@ function iniciarPartida(novoJogo = criarJogo()) {
     explicar(
         "Nova partida! Selecione uma peça clara para começar.",
         "Criamos uma matriz de 8 linhas e 8 colunas, com 12 peças para cada jogador.",
-        "const jogo = criarJogo();"
     );
     atualizarTela();
 }
@@ -301,11 +331,11 @@ function interromperJogoNaTela() {
     const resultado = interromperPartida(jogo);
     selecionada = null;
     let mensagem = `Partida interrompida: jogador ${resultado.vencedor} venceu pela quantidade de peças.`;
-    if (resultado.empate) mensagem = "Partida interrompida: empate na quantidade de peças.";
+    if (resultado.empate)
+        mensagem = "Partida interrompida: empate na quantidade de peças.";
     explicar(
         mensagem,
         "Percorremos a matriz, contamos e comparamos as peças. Damas também contam como uma peça.",
-        "interromperPartida(jogo);"
     );
     registrar("Partida interrompida por comparação de peças.");
     atualizarTela();
@@ -313,9 +343,14 @@ function interromperJogoNaTela() {
 
 buscar("reiniciar").addEventListener("click", () => iniciarPartida());
 buscar("interromper").addEventListener("click", interromperJogoNaTela);
-buscar("mostrar-coordenadas").addEventListener("change", evento => {
-    buscar("tabuleiro").classList.toggle("sem-coordenadas", !evento.target.checked);
-    document.querySelector(".moldura").classList.toggle("sem-eixos", !evento.target.checked);
+buscar("mostrar-coordenadas").addEventListener("change", (evento) => {
+    buscar("tabuleiro").classList.toggle(
+        "sem-coordenadas",
+        !evento.target.checked,
+    );
+    document
+        .querySelector(".moldura")
+        .classList.toggle("sem-eixos", !evento.target.checked);
 });
 
 function alternarFoco(ativar) {
@@ -328,7 +363,7 @@ function alternarFoco(ativar) {
 buscar("alternar-foco").addEventListener("click", () => {
     alternarFoco(!document.body.classList.contains("modo-foco"));
 });
-document.addEventListener("keydown", evento => {
+document.addEventListener("keydown", (evento) => {
     if (evento.key === "Escape") alternarFoco(false);
 });
 iniciarPartida();

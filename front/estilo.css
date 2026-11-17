@@ -291,3 +291,5 @@ footer p { margin-bottom: 0; }
     .topo .nav-aula { display: none; }
     .termos-aula { grid-template-columns: 1fr; }
 }
+
+.topo nav a[aria-current="page"] { color: var(--verde); font-weight: 700; }
